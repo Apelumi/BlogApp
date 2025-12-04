@@ -1,0 +1,63 @@
+from django.conf import settings
+from django.db import models
+from django.utils import timezone
+from django.urls import reverse
+
+# this is the custom modelmanager for publish status.
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return(
+            super().get_queryset().filter(status = Post.Status.PUBLISHED)
+        )
+
+#this is also for draftedcustommanager status
+class DraftedManager(models.Manager):
+    def get_queryset(self):
+        return(
+            super().get_queryset().filter(status = Post.Status.DRAFT)
+        )
+
+class Post(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = 'DF', 'Draft'
+        PUBLISHED = 'PB', 'Published'
+    title = models.CharField(max_length=250)
+    slug = models.SlugField(
+        max_length=250,
+        unique_for_date="publish")
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, #if any author is deleted all his post will be deleted
+        on_delete = models.CASCADE,
+        related_name = 'blog_posts')
+    body = models.TextField()
+    publish = models.DateTimeField(default=timezone.now)
+    created = models.DateTimeField(auto_now_add= True)
+    updated = models.DateTimeField(auto_now= True)
+    status = models.CharField(
+        max_length = 2,
+        choices= Status,
+        default = Status.DRAFT
+    )
+    objects = models.Manager() # this is our default manager, it gets called even if it doesn't get called
+    published = PublishedManager()
+     #custom model manager we created
+
+    class Meta:
+        ordering = ['-publish']
+        indexes = [
+            models.Index(fields = ['-publish']),
+        ]
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse(
+            "blog:post_detail",
+            args= [
+                self.publish.year,
+                self.publish.month,
+                self.publish.day,
+                self.slug
+                ]
+            )

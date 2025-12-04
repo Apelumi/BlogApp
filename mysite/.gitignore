@@ -1,0 +1,26 @@
+# Byte‑compiled / optimized Python files
+__pycache__/
+*.py[cod]
+
+# Django stuff
+*.log
+local_settings.py          # if you have a local settings override
+db.sqlite3                 # <-- your dev DB (ignore it)
+
+# Media / static files that are generated
+media/
+staticfiles/
+
+# Virtual environment (if you keep it inside the repo)
+venv/
+env/
+
+# IDE / editor junk
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS artefacts
+.DS_Store
+Thumbs.db
