@@ -66,10 +66,10 @@ def post_share(request, post_id):
     )
     sent = False
     if request.method == "POST":
-        form = EmailPostForm(request.post)
+        form = EmailPostForm(request.POST)
         if form.is_valid():
             cleanData = form.cleaned_data
-            post_url = request.build_absolute_url(
+            post_url = request.build_absolute_uri(
                 post.get_absolute_url()
             )
             subject = (
@@ -78,7 +78,7 @@ def post_share(request, post_id):
             )
             message = (
                 f"Read {post.title} at {post_url}\n\n"
-                f"{cleanData['name']} and comments: {cleanData['comments']}"
+                f"{cleanData['name']}\'s comments: {cleanData['comments']}"
             )
             send_mail(
                 subject=subject,
