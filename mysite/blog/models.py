@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 # this is the custom modelmanager for publish status.
 class PublishedManager(models.Manager):
@@ -39,8 +40,12 @@ class Post(models.Model):
         default = Status.DRAFT
     )
     objects = models.Manager() # this is our default manager, it gets called even if it doesn't get called
+    #custom model manager we created
     published = PublishedManager()
-     #custom model manager we created
+    # implementing a tagging system model for post
+    tags = TaggableManager()
+
+
 
     class Meta:
         ordering = ['-publish']
