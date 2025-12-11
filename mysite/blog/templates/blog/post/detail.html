@@ -9,7 +9,17 @@
         share this Post if you like
         </a>
     </p>
-
+    <h2>Similar posts</h2>
+    {% for post in similar_posts %}
+        <p>
+        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a
+        </p>
+    {% empty %}
+        <p>There are no similar posts yet.</p>
+    {% endfor %}
+    <p>
+        
+    </p>
     {% with comments.count as total_comments  %}
         {{total_comments}} comment {{total_comments|pluralize}}
     {% endwith %}
