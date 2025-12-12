@@ -1,8 +1,8 @@
-import markdown
-from django import template
 from ..models import Post
 from django.db.models import Count
 from django.utils.safestring import mark_safe
+import markdown
+from django import template
 
 register = template.Library()
 @register.simple_tag
@@ -21,3 +21,6 @@ def show_latest_posts(count = 5):
     latest_posts = Post.published.order_by("-publish")[:count]
     return {"latest_posts": latest_posts}
 
+@register.filter(name = "markdown")
+def markdown_format(text):
+    return mark_safe(markdown.markdown(text))
