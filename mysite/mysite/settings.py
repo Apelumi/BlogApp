@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
+    'django.contrib.sites', # this settings is to include sitemap
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
     'taggit',
