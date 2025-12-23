@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sites', # this settings is to include sitemap
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'taggit',
     'blog.apps.BlogConfig',
 ]
@@ -83,7 +84,7 @@ DATABASES = {
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST')
-        
+
     }
 }
 

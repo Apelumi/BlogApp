@@ -3,11 +3,12 @@ from django.http import Http404, request
 from .models import Post, Comment
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailPostForm, CommentModelForm
+from .forms import EmailPostForm, CommentModelForm, SeachForm
 from django.core.mail import send_mail
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector
 
 class PostListView(ListView):
     queryset = Post.published.all()
@@ -69,7 +70,7 @@ def post_detail(request, year, month, day, post):
 
     # form for users to comment
     form = CommentModelForm()
-    
+
     #retreiving similar posts with the tag
     post_tags_ids = post.tags.values_list("id", flat=True)
     similar_posts = Post.published.filter(tags__in = post_tags_ids).exclude(id = post.id)
@@ -150,4 +151,27 @@ def post_comment(request, post_id):
         {"post": post,
          "forms": form,
          "comment": comment}
+    )
+
+def post_search(request):
+    form = SeachForm
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SeachForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data["query"]
+            results = (
+                Post.published.annotate(
+                    search = SearchVector('title', 'body'),
+                ).filter(search = query)
+            )
+    return render(
+        request,
+        'blog/post/search.html',
+        {
+            "results": results,
+            "form": form,
+            "query": query
+        }
     )
