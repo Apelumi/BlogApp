@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from taggit.managers import TaggableManager
-
+from django.contrib.contenttypes.fields import GenericRelation
 # this is the custom modelmanager for publish status.
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -44,7 +44,7 @@ class Post(models.Model):
     published = PublishedManager()
     # implementing a tagging system model for post
     tags = TaggableManager()
-
+    tagged_items = GenericRelation('taggit.TaggedItem', related_query_name='post')
 
 
     class Meta:
